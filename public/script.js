@@ -19,3 +19,27 @@ function addMessage(text, sender) {
 
     return content;
 }
+
+chatForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    const message = userInput.value.trim();
+
+    if (!message) {
+        return;
+    }
+
+    // =========================
+    // Tampilkan pesan user
+    // =========================
+    addMessage(message, "user");
+
+    // Simpan pesan user
+    messages.push({
+        role: "user",
+        content: message
+    });
+
+    // Kosongkan input
+    userInput.value = "";
