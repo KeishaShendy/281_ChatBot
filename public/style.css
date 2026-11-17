@@ -1,0 +1,241 @@
+:root {
+    --bg-main: #0B0E14; /* Biru/Hitam sangat gelap khas IDE */
+    --bg-glass: rgba(15, 23, 42, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --accent-glow: #3b82f6; /* Biru neon */
+    --accent-purple: #8b5cf6; /* Ungu neon */
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    
+    /* Gradien untuk pesan User */
+    --msg-user: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    /* Warna untuk pesan Bot */
+    --msg-bot: rgba(30, 41, 59, 0.6);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-main);
+    /* Background efek cahaya dari belakang layar */
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--text-primary);
+}
+
+/* WADAH UTAMA - Tampilan seperti Window macOS / Terminal Futuristik */
+.ai-agent-container {
+    width: 100%;
+    max-width: 900px; /* Lebar ala web apps */
+    height: 90vh;
+    background: var(--bg-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-glass);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Mengunci agar form tidak tembus ke bawah */
+}
+
+/* ---------------- HEADER ---------------- */
+.agent-header {
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid var(--border-glass);
+    z-index: 10;
+}
+
+/* Efek Avatar Glowing */
+.avatar-glow {
+    position: relative;
+}
+.avatar-glow::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: linear-gradient(135deg, var(--accent-glow), var(--accent-purple));
+    border-radius: 50%;
+    filter: blur(8px);
+    opacity: 0.7;
+    z-index: -1;
+    animation: pulse 2s infinite alternate;
+}
+@keyframes pulse {
+    0% { opacity: 0.5; transform: scale(0.95); }
+    100% { opacity: 0.9; transform: scale(1.05); }
+}
+
+.agent-avatar {
+    width: 52px;
+    height: 52px;
+    background: #1E293B;
+    border: 1px solid var(--border-glass);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.agent-info h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.badge {
+    font-size: 0.65rem;
+    background: linear-gradient(135deg, var(--accent-glow), var(--accent-purple));
+    padding: 3px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+}
+.status {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10B981;
+}
+
+/* ---------------- AREA CHAT ---------------- */
+.chat-area {
+    flex: 1; /* Membuat area ini fleksibel mengambil sisa tinggi window */
+    padding: 30px;
+    overflow-y: auto; /* Kunci agar scroll hanya di area ini */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar Keren */
+.chat-area::-webkit-scrollbar { width: 6px; }
+.chat-area::-webkit-scrollbar-track { background: transparent; }
+.chat-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+.chat-area::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+/* Animasi Chat Muncul */
+.message {
+    display: flex;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 16px 22px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    letter-spacing: 0.3px;
+}
+
+/* Bubble Pesan AI */
+.message.bot { justify-content: flex-start; }
+.message.bot .message-content {
+    background: var(--msg-bot);
+    border: 1px solid var(--border-glass);
+    border-radius: 4px 20px 20px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Bubble Pesan User */
+.message.user { justify-content: flex-end; }
+.message.user .message-content {
+    background: var(--msg-user);
+    border-radius: 20px 4px 20px 20px;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ---------------- AREA INPUT ---------------- */
+.agent-input-container {
+    padding: 20px 30px 30px;
+    background: linear-gradient(to top, rgba(11, 14, 20, 0.95) 60%, transparent);
+    z-index: 10;
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+    padding: 8px 8px 8px 24px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.input-wrapper:focus-within {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+}
+
+.input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+}
+.input-wrapper input::placeholder {
+    color: var(--text-secondary);
+}
+
+.input-wrapper button {
+    background: linear-gradient(135deg, var(--accent-glow), var(--accent-purple));
+    color: white;
+    border: none;
+    padding: 0 26px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+.input-wrapper button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+.input-wrapper button:disabled {
+    background: #1E293B;
+    color: #64748B;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
