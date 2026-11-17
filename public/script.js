@@ -82,3 +82,59 @@ chatForm.addEventListener("submit", async (event) => {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
+
+        while (true) {
+
+            const { done, value } = await reader.read();
+
+            if (done) {
+                break;
+            }
+
+            // Decode data
+            buffer += decoder.decode(value, {
+                stream: true
+            });
+
+            // Pisahkan berdasarkan newline
+            const lines = buffer.split("\n");
+
+            // Simpan bagian yang belum lengkap
+            buffer = lines.pop();
+
+            for (const line of lines) {
+
+                const trimmedLine = line.trim();
+
+                if (!trimmedLine) {
+                    continue;
+                }
+
+                if (!trimmedLine.startsWith("data:")) {
+                    continue;
+                }
+
+                const data = trimmedLine.slice(5).trim();
+
+                if (data === "[DONE]") {
+                    continue;
+                }
+
+                try {
+
+                    const token = JSON.parse(data);
+
+                    // Tambahkan token
+                    botResponse += token;
+
+                    // Update tampilan
+                    botContent.textContent = botResponse;
+
+                    // Auto scroll
+                    chatBox.scrollTop = chatBox.scrollHeight;
+
+                } catch (error) {
+                    console.error("Gagal membaca token:", error);
+                }
+            }
+        }
