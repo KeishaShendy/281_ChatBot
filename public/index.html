@@ -22,3 +22,31 @@
                 <p class="status"><span class="dot"></span> NVIDIA Nemotron Ultra</p>
             </div>
         </header>
+
+        <!-- Area Chat -->
+        <main id="chat-box" class="chat-area">
+            <div class="message bot">
+                <!-- Teks default diratakan dalam satu baris agar tidak menjorok ke dalam -->
+                <div class="message-content">Halo! Ada yang bisa saya bantu hari ini? ✨</div>
+            </div>
+        </main>
+
+        <!-- Area Input -->
+        <footer class="agent-input-container">
+            <form id="chat-form" class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="user-input" 
+                    placeholder="Ketik pesan Anda di sini..." 
+                    autocomplete="off" 
+                    required
+                >
+                <button type="submit" id="send-btn">Kirim</button>
+            </form>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
